@@ -1,0 +1,21 @@
+
+Works for windows!  
+Need to download exiftool  from this website https://exiftool.org/ and add exe file to the system PATH.  
+Instruction:  
+
+1) Go to the official ExifTool website. https://exiftool.org/  
+2) Download the Windows executable version from the Windows Executable link  
+3) It will download a .zip file  
+4) Extract the ZIP file. The extracted files should contain exiftool(-k).exe  
+5) Rename the executable to exiftool.exe
+6) Move it to most convenient place (for example: C:\exiftool-13.24_64)  
+6) Press Win + X and choose System  
+7) In the System window, click Advanced system settings on the left side  
+8) In the System Properties window, click on the Environment Variables button  
+9) In the System Variables section, find the Path variable and click Edit  
+10) Click New, then add the directory path where exiftool.exe is located  
+11) Click OK to save the changes  
+12) Check that it works by openeing new! cmd and run exiftool -ver  
+
+Usage:
+bundle exec ruby .\rename-files.rb -h
