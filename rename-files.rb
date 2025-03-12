@@ -1,6 +1,6 @@
 
 require 'bundler/setup'
-require 'mini_exiftool'
+require 'exifr/jpeg'
 require 'fileutils'
 require 'optparse'
 
@@ -65,17 +65,10 @@ def rename_file(file, current_file_path, options)
   extension = File.extname(file)
   current_directory = File.dirname(current_file_path)
 
-  new_name = "#{custom_file_prefix}#{formated_creation_time}#{extension}"
-  new_file_path = File.join(current_directory, new_name)
-
-  if current_file_path == new_file_path
-    p "Keep current name: #{new_name}"
-    return
-  end
-
-  i = 1
-  while File.exist?(new_file_path)
+  i = 0
+  begin
     new_name = "#{custom_file_prefix}#{formated_creation_time}-#{i.to_s.rjust(3, '0')}#{extension}"
+    new_name = new_name.sub(/-000#{extension}/, "#{extension}") if new_name.end_with?("-000#{extension}") # remove trailing 000 for for first file
     new_file_path = File.join(current_directory, new_name)
 
     if current_file_path == new_file_path
@@ -84,15 +77,15 @@ def rename_file(file, current_file_path, options)
     end
 
     i += 1
-  end
+  end while File.exist?(new_file_path)
 
   File.rename(current_file_path, new_file_path)
   p "Renamed: #{file} -> #{new_name}"
 end
 
 def get_formated_creation_time(file_path, datetime_format)
-  exif = MiniExiftool.new(file_path)
-  date_time_taken = exif.date_time_original
+  exif = EXIFR::JPEG.new(file_path)
+  date_time_taken = exif.date_time
 
   if date_time_taken
     date_time_taken.strftime(datetime_format)
